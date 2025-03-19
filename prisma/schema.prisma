@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL_NON_POOLING")
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  slug      String   // The blog post slug
+  ipAddress String   // IP address of the liker (for preventing duplicate likes)
+  createdAt DateTime @default(now())
+
+  @@unique([slug, ipAddress])
+  @@index([slug])
+}
+
+model Comment {
+  id           String        @id @default(cuid())
+  slug         String        // The blog post slug
+  content      String        // The comment content
+  authorName   String        // Name of the commenter
+  authorEmail  String        // Email of the commenter (not displayed publicly)
+  ipAddress    String        // IP address for abuse prevention
+  status       String        @default("pending") // pending, approved, rejected
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  commentLikes CommentLike[]
+
+  @@index([slug])
+  @@index([status])
+}
+
+model CommentLike {
+  id        String   @id @default(cuid())
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  ipAddress String   // IP address for preventing duplicate likes
+  createdAt DateTime @default(now())
+
+  @@unique([commentId, ipAddress])
+  @@index([commentId])
+} 
