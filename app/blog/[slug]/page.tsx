@@ -1,31 +1,36 @@
-import { notFound } from 'next/navigation'
-import { CustomMDX } from 'app/components/mdx'
-import { formatDate, getBlogPosts } from 'app/blog/utils'
-import { baseUrl } from 'app/sitemap'
+import { notFound } from 'next/navigation';
+import { CustomMDX } from 'app/components/mdx';
+import { formatDate, getBlogPosts } from 'app/blog/utils';
+import { baseUrl } from 'app/sitemap';
+import { LikeButton } from 'app/components/like-button';
+import { cookies } from 'next/headers';
+import { CommentSection } from 'app/components/comment-section';
 
 export async function generateStaticParams() {
-  let posts = getBlogPosts()
+  let posts = await getBlogPosts();
 
-  return posts.map((post) => ({
+  return posts.map(post => ({
     slug: post.slug,
-  }))
+  }));
 }
 
-export function generateMetadata({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export async function generateMetadata({ params }) {
+  let posts = await getBlogPosts();
+  let post = posts.find(post => post.slug === params.slug);
   if (!post) {
-    return
+    return;
   }
 
-  let {
-    title,
-    publishedAt: publishedTime,
-    summary: description,
-    image,
-  } = post.metadata
-  let ogImage = image
-    ? image
-    : `${baseUrl}/og?title=${encodeURIComponent(title)}`
+  let { title, publishedAt: publishedTime, summary: description, image } = post.metadata;
+
+  // Get theme preference or default to light
+  const cookieStore = cookies();
+  const theme = cookieStore.get('theme')?.value || 'light';
+
+  let formattedDate = await formatDate(post.metadata.publishedAt);
+
+  // Use the post's image if provided, otherwise use the new snapshot OG image with theme
+  let ogImage = image ? image : `${baseUrl}/og?slug=${params.slug}&theme=${theme}`;
 
   return {
     title,
@@ -48,15 +53,22 @@ export function generateMetadata({ params }) {
       description,
       images: [ogImage],
     },
-  }
+  };
 }
 
-export default function Blog({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export default async function Blog({ params }) {
+  let posts = await getBlogPosts();
+  let post = posts.find(post => post.slug === params.slug);
 
   if (!post) {
-    notFound()
+    notFound();
   }
+
+  // Get theme preference or default to light
+  const cookieStore = cookies();
+  const theme = cookieStore.get('theme')?.value || 'light';
+
+  const formattedDate = await formatDate(post.metadata.publishedAt);
 
   return (
     <section>
@@ -73,7 +85,7 @@ export default function Blog({ params }) {
             description: post.metadata.summary,
             image: post.metadata.image
               ? `${baseUrl}${post.metadata.image}`
-              : `/og?title=${encodeURIComponent(post.metadata.title)}`,
+              : `${baseUrl}/og?slug=${params.slug}&theme=${theme}`,
             url: `${baseUrl}/blog/${post.slug}`,
             author: {
               '@type': 'Person',
@@ -82,17 +94,28 @@ export default function Blog({ params }) {
           }),
         }}
       />
-      <h1 className="title font-semibold text-2xl tracking-tighter">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          {formatDate(post.metadata.publishedAt)}
-        </p>
+      <h1 className="title font-semibold text-2xl tracking-tighter">{post.metadata.title}</h1>
+      <div className="flex flex-col mt-2 mb-8">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">{formattedDate}</p>
+        {post.metadata.tags && (
+          <div className="flex flex-wrap mt-2 gap-1">
+            {post.metadata.tags.map(tag => (
+              <span
+                key={tag}
+                className="text-xs text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <article className="prose">
         <CustomMDX source={post.content} />
       </article>
+      <LikeButton slug={post.slug} />
+
+      <CommentSection slug={post.slug} />
     </section>
-  )
+  );
 }
