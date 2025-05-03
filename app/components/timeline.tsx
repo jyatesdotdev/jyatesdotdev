@@ -77,22 +77,22 @@ export function Timeline({ items }: TimelineProps) {
           <div
             key={groupIndex}
             ref={el => (itemRefs.current[groupIndex] = el)}
-            className={`relative mb-12 pl-12 transition-all duration-500 ease-in-out ${
+            className={`relative mb-8 sm:mb-12 pl-8 sm:pl-12 transition-all duration-500 ease-in-out ${
               0 === groupIndex ? 'opacity-100 translate-x-0' : 'opacity-80'
             }`}
           >
             {/* Timeline dot */}
             <div
-              className={`absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 rounded-full border-2 border-white dark:border-black shadow-md transition-all duration-300 ${
+              className={`absolute left-3 sm:left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-white dark:border-black shadow-md transition-all duration-300 ${
                 0 === groupIndex
                   ? 'bg-blue-500 dark:bg-blue-400 scale-125'
                   : 'bg-neutral-300 dark:bg-neutral-700'
               }`}
             />
 
-            <div className="flex items-start gap-5 group">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5 group">
               {sortedGroup[0].logo && (
-                <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
+                <div className="relative h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105">
                   <Image
                     src={sortedGroup[0].logo}
                     alt={`${sortedGroup[0].company} logo`}
@@ -102,21 +102,21 @@ export function Timeline({ items }: TimelineProps) {
                 </div>
               )}
 
-              <div className="flex-1 rounded-lg p-5 bg-white dark:bg-neutral-900 shadow-sm border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:shadow-md">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+              <div className="flex-1 rounded-lg p-4 sm:p-5 bg-white dark:bg-neutral-900 shadow-sm border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:shadow-md">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                     {sortedGroup[0].company}
                   </h3>
-                  <span className="text-sm font-medium px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
+                  <span className="text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
                     {earliestStartDate} - {latestEndDate}
                   </span>
                 </div>
 
                 {sortedGroup[0].location && (
-                  <p className="mb-3 text-neutral-600 dark:text-neutral-400 flex items-center gap-1">
+                  <p className="mb-3 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 flex items-center gap-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
+                      className="h-3 w-3 sm:h-4 sm:w-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -139,18 +139,18 @@ export function Timeline({ items }: TimelineProps) {
                 )}
 
                 {/* Display each position within the company */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {sortedGroup.map((position, posIndex) => (
                     <div
                       key={posIndex}
                       className={
                         posIndex > 0
-                          ? 'pt-4 border-t border-neutral-100 dark:border-neutral-800'
+                          ? 'pt-3 sm:pt-4 border-t border-neutral-100 dark:border-neutral-800'
                           : ''
                       }
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                        <h4 className="font-medium text-neutral-800 dark:text-neutral-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+                        <h4 className="text-sm sm:text-base font-medium text-neutral-800 dark:text-neutral-200">
                           {position.title}
                         </h4>
                         <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
@@ -158,9 +158,9 @@ export function Timeline({ items }: TimelineProps) {
                         </span>
                       </div>
 
-                      <ul className="mt-2 list-disc list-inside text-neutral-800 dark:text-neutral-200 leading-relaxed space-y-1">
+                      <ul className="mt-2 list-disc list-inside text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-relaxed space-y-1">
                         {position.description.map((desc, i) => (
-                          <li key={i}>{desc}</li>
+                          <li key={i} className="ml-2">{desc}</li>
                         ))}
                       </ul>
                     </div>
