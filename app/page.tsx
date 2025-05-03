@@ -1,51 +1,8 @@
 import Image from 'next/image';
-import { Timeline } from 'app/components/timeline';
-import { Projects } from 'app/components/projects';
+import Link from 'next/link';
 import { RecentBlogPosts } from 'app/components/recent-blog-posts';
 import { getBlogPosts, formatDate } from 'app/blog/utils';
-
-const careerTimeline = [
-  {
-    title: 'Senior Software Developer',
-    company: 'INVIDI Technologies',
-    startDate: 'June 2022',
-    endDate: 'Present',
-    location: 'Princeton, NJ | Hybrid',
-    description: [
-      'Managing multi-region Kubernetes clusters in AWS and GCP.',
-      'Developed Java microservices for AWS and GCP deployments, collaborating with product owners for streamlined processes.',
-      'Mentored new hires through onboarding and pair programming, reducing ramp-up time by 50%.',
-      'Instituted real-time performance dashboards, significantly reducing outage response times.'
-    ],
-    logo: '/logos/invidi.svg',
-  },
-  {
-    title: 'Software Developer',
-    company: 'INVIDI Technologies',
-    startDate: 'Jan 2017',
-    endDate: 'June 2022',
-    location: 'Newtown, PA | Hybrid',
-    description: [
-      'Engineered and deployed Java and C/C++ applications globally, reducing latency for end-users worldwide.',
-      'Implemented new version control procedures, decreasing post-release issues and transitioning to an agile cloud framework.',
-      'Presented learning sessions to promote knowledge sharing and to foster innovation within development teams.'
-    ],
-    logo: '/logos/invidi.svg',
-  },
-  {
-    title: 'Associate Software Developer',
-    company: 'INVIDI Technologies',
-    startDate: 'Nov 2015',
-    endDate: 'Dec 2016',
-    location: 'Newtown, PA | On-site',
-    description: [
-      'Identified and fixed bugs in C/C++ codebases using GDB, reducing system crashes.',
-      'Developed emulation tools for comprehensive testing, saving on hardware purchases.'
-    ],
-    logo: '/logos/invidi.svg',
-  },
-  // Add more career items as needed
-];
+import { libraryItems } from 'app/data/library';
 
 export default async function Page() {
   // Fetch recent blog posts
@@ -61,6 +18,11 @@ export default async function Page() {
     .sort((a, b) => new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime())
     .slice(0, 3);
 
+  // Get random library items
+  const randomLibraryItems = [...libraryItems]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+
   return (
     <section className="w-full">
       {/* Profile Section */}
@@ -70,43 +32,81 @@ export default async function Page() {
             src="/images/profile.jpeg"
             alt="Profile picture"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-full object-cover"
             priority
           />
         </div>
         <div className="flex-grow max-w-none">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Jonathan Yates</h1>
-          <p className="text-neutral-400 mb-4">Senior Software Developer</p>
-          <h2>Meet Jonathan: The Infrastructure Alchemist</h2>
-          <br />
-          <p className="text-neutral-200 text-base">
-            By day, he's a senior software engineer bending Java and Python to his will. By night,
-            he's the mastermind of a meticulously crafted home lab—spinning up K3s clusters on
-            Proxmox, conjuring dynamic DNS updates with BIND9 and DHCP, and orchestrating VLANs like
-            a symphony conductor of packets. He's the kind of dev who doesn't just build — he
-            automates, monitors, and refactors with surgical precision. Ad tech may pay the bills,
-            but his real passion lies in clean architecture, elegant systems, and making his
-            networks smarter than most startups. Powered by caffeine, curiosity, and just a touch of
-            ADHD-fueled hyperfocus, Jonathan's not afraid of complexity — he invites it, then tames
-            it with Terraform and YAML.
+          <h2 className="text-neutral-400 mb-4">Senior Software Developer at INVIDI Technologies</h2>
+          <p className="text-neutral-600 dark:text-neutral-400">
+            Passionate about software development, cloud technologies, and continuous learning.
+            Currently focused on building scalable microservices and mentoring fellow developers.
           </p>
         </div>
       </div>
 
-      {/* Career Timeline */}
-      <div className="mt-12 w-full">
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-8">Career Timeline</h2>
-        <Timeline items={careerTimeline} />
-      </div>
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Latest Blog Posts */}
+        <div className="md:col-span-2">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold tracking-tight">Latest Blog Posts</h2>
+            <Link href="/blog" className="text-neutral-400 hover:text-neutral-300 text-sm">
+              View all posts →
+            </Link>
+          </div>
+          <RecentBlogPosts posts={recentPosts} />
+        </div>
 
-      {/* Recent Blog Posts */}
-      <div className="mt-12 w-full">
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-8">Recent Blog Posts</h2>
-        <RecentBlogPosts posts={recentPosts} />
-        <div className="mt-6 text-right">
-          <a href="/blog" className="text-neutral-400 hover:text-neutral-300 text-sm">
-            View all posts →
-          </a>
+        {/* Library Sampling */}
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold tracking-tight">From the Library</h2>
+            <Link href="/library" className="text-neutral-400 hover:text-neutral-300 text-sm">
+              View library →
+            </Link>
+          </div>
+          <div className="space-y-4">
+            {randomLibraryItems.map((item, index) => (
+              <Link
+                key={index}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
+              >
+                <h3 className="font-medium mb-2">{item.title}</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">{item.description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight mb-6">Quick Links</h2>
+          <div className="space-y-4">
+            <Link
+              href="/career"
+              className="block p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
+            >
+              <h3 className="font-medium mb-2">View Career Timeline</h3>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Explore my professional journey and achievements
+              </p>
+            </Link>
+            <Link
+              href="/contact"
+              className="block p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
+            >
+              <h3 className="font-medium mb-2">Get in Touch</h3>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Have a question or want to collaborate? Reach out!
+              </p>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

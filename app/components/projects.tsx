@@ -6,7 +6,7 @@ import Link from 'next/link';
 interface ProjectItem {
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
   technologies: string[];
   demoUrl?: string;
   githubUrl?: string;
@@ -26,14 +26,16 @@ export function Projects({ items }: ProjectsProps) {
           className={`flex flex-col rounded-lg overflow-hidden transition-all duration-500 ease-in-out shadow-md
             ${project.featured ? 'md:col-span-2' : ''}`}
         >
-          <div className="relative h-48 w-full">
-            <Image
-              src={project.imageUrl}
-              alt={`Screenshot of ${project.title}`}
-              fill
-              className="object-cover"
-            />
-          </div>
+          {project.imageUrl &&
+            <div className="relative h-48 w-full">
+              <Image
+                src={project.imageUrl}
+                alt={`Screenshot of ${project.title}`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          }
 
           <div className="flex-1 p-5 bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800">
             <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">

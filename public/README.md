@@ -1,14 +1,14 @@
 # Public Directory
 
-This directory contains static assets for your Next.js application. Files placed here will be served from the root path of your application.
+This directory contains static assets. Files placed here will be served from the root path of the application.
 
 ## Usage
 
-Place your static assets (images, fonts, etc.) in this directory. You can then reference them in your code like this:
+Place static assets (images, fonts, etc.) in this directory. They can be referenced like this:
 
 ```jsx
 // Example usage in a component
-<img src="/your-image.jpg" alt="Description" />
+<img src="/image.jpg" alt="Description" />
 ```
 
 ## Common Asset Types
