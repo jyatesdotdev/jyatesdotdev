@@ -32,6 +32,7 @@ export default async function Page() {
             src="/images/profile.jpeg"
             alt="Profile picture"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-full object-cover"
             priority
           />

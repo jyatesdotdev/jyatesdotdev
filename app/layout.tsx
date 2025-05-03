@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     default: 'jyates.dev | Software Engineer',
     template: '%s | jyates.dev',
   },
-  description: 'This is my portfolio.',
+  description: 'This is my personal site.',
   openGraph: {
     title: 'My Portfolio',
     description: 'A place to showcase my work history, projects, thoughts, and experiences.',
