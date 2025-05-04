@@ -26,4 +26,4 @@ export async function initializeDatabase() {
     console.error('Database connection failed:', error);
     return { success: false, error };
   }
-} 
+}

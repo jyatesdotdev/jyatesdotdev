@@ -32,7 +32,8 @@ const commonStyles = {
     flexDirection: 'column' as const,
     width: '100%',
     height: '100%',
-    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+    fontFamily:
+      'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
   },
 };
 
@@ -53,7 +54,7 @@ const loadOGBackground = () => {
 // Blog post OG image component
 const BlogPostOGImage = ({ post, date, theme }: { post: any; date?: string; theme: string }) => {
   const themeStyles = themeConfig[theme as keyof typeof themeConfig];
-  
+
   return (
     <div
       style={{
@@ -234,7 +235,17 @@ const BlogPostOGImage = ({ post, date, theme }: { post: any; date?: string; them
 };
 
 // Default OG image component
-const DefaultOGImage = ({ title, subtitle, date, theme }: { title: string; subtitle: string; date?: string; theme: string }) => {
+const DefaultOGImage = ({
+  title,
+  subtitle,
+  date,
+  theme,
+}: {
+  title: string;
+  subtitle: string;
+  date?: string;
+  theme: string;
+}) => {
   const themeStyles = themeConfig[theme as keyof typeof themeConfig];
   const isDark = theme === 'dark';
 

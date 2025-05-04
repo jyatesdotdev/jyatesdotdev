@@ -26,7 +26,7 @@ export function Projects({ items }: ProjectsProps) {
           className={`flex flex-col rounded-lg overflow-hidden transition-all duration-500 ease-in-out shadow-md
             ${project.featured ? 'md:col-span-2' : ''}`}
         >
-          {project.imageUrl &&
+          {project.imageUrl && (
             <div className="relative h-48 w-full">
               <Image
                 src={project.imageUrl}
@@ -35,7 +35,7 @@ export function Projects({ items }: ProjectsProps) {
                 className="object-cover"
               />
             </div>
-          }
+          )}
 
           <div className="flex-1 p-5 bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800">
             <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">

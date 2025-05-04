@@ -5,4 +5,4 @@ module.exports = {
   // Add any setup options here
   // This might include mocking global objects
   // Or setting up test environment
-}; 
+};

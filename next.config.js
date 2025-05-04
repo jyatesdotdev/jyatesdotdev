@@ -17,8 +17,8 @@ const nextConfig = {
           destination: '/blog/:path*',
         },
       ],
-    }
+    };
   },
-}
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig;

@@ -2,7 +2,7 @@ import { Library } from '../components/library';
 import { libraryItems } from '../data/library';
 
 export const metadata = {
-  title: 'Library | Your Name',
+  title: 'Library',
   description: 'A curated collection of interesting resources, articles, and references.',
 };
 

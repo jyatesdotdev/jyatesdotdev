@@ -12,7 +12,7 @@ import { ReCaptchaProvider } from './components/recaptcha-provider';
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'jyates.dev | Software Engineer',
+    default: 'jyates.dev | Senior Software Engineer',
     template: '%s | jyates.dev',
   },
   description: 'This is my personal site.',

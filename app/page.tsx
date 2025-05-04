@@ -15,19 +15,20 @@ export default async function Page() {
 
   // Sort posts by date (newest first) and get the most recent 3
   const recentPosts = allPosts
-    .sort((a, b) => new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime()
+    )
     .slice(0, 3);
 
   // Get random library items
-  const randomLibraryItems = [...libraryItems]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
+  const randomLibraryItems = [...libraryItems].sort(() => Math.random() - 0.5).slice(0, 3);
 
   return (
     <section className="w-full">
       {/* Profile Section */}
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6 lg:gap-10 mb-12">
-        <div className="relative flex-shrink-1 aspect-square s:w-48 md:w-56 lg:w-64 xl:w-72">
+        <div className="relative flex-shrink-1 aspect-square w-24 sm:w-48 md:w-56 lg:w-64 xl:w-72">
           <Image
             src="/images/profile.jpeg"
             alt="Profile picture"
@@ -39,7 +40,9 @@ export default async function Page() {
         </div>
         <div className="flex-grow max-w-none">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Jonathan Yates</h1>
-          <h2 className="text-neutral-400 mb-4">Senior Software Developer at INVIDI Technologies</h2>
+          <h2 className="text-neutral-400 mb-4">
+            Senior Software Developer at INVIDI Technologies
+          </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
             Passionate about software development, cloud technologies, and continuous learning.
             Currently focused on building scalable microservices and mentoring fellow developers.
