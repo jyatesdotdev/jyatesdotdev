@@ -1,12 +1,17 @@
 import { Projects } from 'app/components/projects';
 
+export const metadata = {
+  title: 'Projects',
+  description: 'A list of my past and current projects.',
+};
+
 const projectsList = [
   {
     title: 'Personal Portfolio',
     description:
       'A modern portfolio site built with Next.js, TypeScript, and Tailwind CSS. Features a blog, contact form, and project showcase.',
-    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel']
-  }
+    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
+  },
 ];
 
 export default function ProjectsPage() {

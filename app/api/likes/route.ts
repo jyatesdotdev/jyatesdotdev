@@ -9,15 +9,12 @@ export async function GET(request: NextRequest) {
     const slug = searchParams.get('slug');
 
     if (!slug) {
-      return NextResponse.json(
-        { error: 'Slug is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
     }
 
     // Count likes for the post
     const likeCount = await prisma.postLike.count({
-      where: { slug }
+      where: { slug },
     });
 
     // Check if the current IP has liked the post
@@ -25,20 +22,17 @@ export async function GET(request: NextRequest) {
     const userHasLiked = await prisma.postLike.findFirst({
       where: {
         slug,
-        ipAddress
-      }
+        ipAddress,
+      },
     });
 
     return NextResponse.json({
       likes: likeCount,
-      userHasLiked: !!userHasLiked
+      userHasLiked: !!userHasLiked,
     });
   } catch (error) {
     console.error('Error getting like count:', error);
-    return NextResponse.json(
-      { error: 'Failed to get like count' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get like count' }, { status: 500 });
   }
 }
 
@@ -48,10 +42,7 @@ export async function POST(request: NextRequest) {
     const { slug } = await request.json();
 
     if (!slug) {
-      return NextResponse.json(
-        { error: 'Slug is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
     }
 
     const ipAddress = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
@@ -60,25 +51,25 @@ export async function POST(request: NextRequest) {
     const existingLike = await prisma.postLike.findFirst({
       where: {
         slug,
-        ipAddress
-      }
+        ipAddress,
+      },
     });
 
     if (existingLike) {
       // If already liked, remove the like (toggle functionality)
       await prisma.postLike.delete({
         where: {
-          id: existingLike.id
-        }
+          id: existingLike.id,
+        },
       });
 
       const updatedLikeCount = await prisma.postLike.count({
-        where: { slug }
+        where: { slug },
       });
 
       return NextResponse.json({
         likes: updatedLikeCount,
-        userHasLiked: false
+        userHasLiked: false,
       });
     }
 
@@ -86,23 +77,20 @@ export async function POST(request: NextRequest) {
     await prisma.postLike.create({
       data: {
         slug,
-        ipAddress
-      }
+        ipAddress,
+      },
     });
 
     const updatedLikeCount = await prisma.postLike.count({
-      where: { slug }
+      where: { slug },
     });
 
     return NextResponse.json({
       likes: updatedLikeCount,
-      userHasLiked: true
+      userHasLiked: true,
     });
   } catch (error) {
     console.error('Error adding like:', error);
-    return NextResponse.json(
-      { error: 'Failed to like post' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to like post' }, { status: 500 });
   }
-} 
+}

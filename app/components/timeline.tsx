@@ -160,7 +160,9 @@ export function Timeline({ items }: TimelineProps) {
 
                       <ul className="mt-2 list-disc list-inside text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-relaxed space-y-1">
                         {position.description.map((desc, i) => (
-                          <li key={i} className="ml-2">{desc}</li>
+                          <li key={i} className="ml-2">
+                            {desc}
+                          </li>
                         ))}
                       </ul>
                     </div>
