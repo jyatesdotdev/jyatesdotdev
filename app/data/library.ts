@@ -20,15 +20,29 @@ export const libraryItems: LibraryItem[] = [
     description:
       'A comprehensive guide to TypeScript, covering advanced types, compiler options, and best practices.',
     url: 'https://basarat.gitbook.io/typescript/',
-    category: 'programming',
+    category: 'websites',
     dateAdded: '2025-04-20',
   },
   {
-    title: 'Designing Data-Driven Application',
+    title: 'Designing Data-Driven Applications',
     description:
       'An absolutely excellent book that is worth a read for any software engineer that touches distributed systems!',
     url: 'https://dataintensive.net',
     category: 'books',
     dateAdded: '2025-05-04',
+  },
+  {
+    title: 'Distributed Services with Go',
+    description: 'A comprehensive guide to distributed systems with Go, and includes a practical guide to building microservices.',
+    url: 'https://pragprog.com/titles/tjgo/distributed-services-with-go/',
+    category: 'books',
+    dateAdded: '2025-05-12',
+  },
+  {
+    title: 'Algorithms, 4th Edition',
+    description: 'A comprehensive guide to data structures and algorithms, including a practical guide to building data structures.',
+    url: 'https://algs4.cs.princeton.edu/home/',
+    category: 'books',
+    dateAdded: '2025-05-12',
   }
 ];
