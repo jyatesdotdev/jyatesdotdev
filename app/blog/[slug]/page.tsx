@@ -29,8 +29,8 @@ export async function generateMetadata({ params }) {
 
   let formattedDate = await formatDate(post.metadata.publishedAt);
 
-  // Use the post's image if provided, otherwise use the new snapshot OG image with theme
-  let ogImage = image ? image : `${baseUrl}/og?slug=${params.slug}&theme=${theme}`;
+  // Use the post's image if provided, otherwise use the static OG image or fallback to dynamic generation
+  let ogImage = image ? image : `${baseUrl}/images/og/blog/${params.slug}.png`;
 
   return {
     title,
@@ -85,7 +85,7 @@ export default async function Blog({ params }) {
             description: post.metadata.summary,
             image: post.metadata.image
               ? `${baseUrl}${post.metadata.image}`
-              : `${baseUrl}/og?slug=${params.slug}&theme=${theme}`,
+              : `${baseUrl}/images/og/blog/${params.slug}.png`,
             url: `${baseUrl}/blog/${post.slug}`,
             author: {
               '@type': 'Person',
