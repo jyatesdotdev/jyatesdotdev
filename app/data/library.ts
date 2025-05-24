@@ -33,15 +33,24 @@ export const libraryItems: LibraryItem[] = [
   },
   {
     title: 'Distributed Services with Go',
-    description: 'A comprehensive guide to distributed systems with Go, and includes a practical guide to building microservices.',
+    description:
+      'A comprehensive guide to distributed systems with Go, and includes a practical guide to building microservices.',
     url: 'https://pragprog.com/titles/tjgo/distributed-services-with-go/',
     category: 'books',
     dateAdded: '2025-05-12',
   },
   {
     title: 'Algorithms, 4th Edition',
-    description: 'A comprehensive guide to data structures and algorithms, including a practical guide to building data structures.',
+    description:
+      'A comprehensive guide to data structures and algorithms, including a practical guide to building data structures.',
     url: 'https://algs4.cs.princeton.edu/home/',
+    category: 'books',
+    dateAdded: '2025-05-12',
+  },
+  {
+    title: 'Practical Genetic Algorithms',
+    description: 'A comprehensive guide to genetic algorithms, including a practical guide to building genetic algorithms.',
+    url: 'https://onlinelibrary.wiley.com/doi/book/10.1002/0471671746',
     category: 'books',
     dateAdded: '2025-05-12',
   }

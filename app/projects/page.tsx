@@ -1,18 +1,10 @@
 import { Projects } from 'app/components/projects';
+import { projects } from '../data/projects';
 
 export const metadata = {
   title: 'Projects',
   description: 'A list of my past and current projects.',
 };
-
-const projectsList = [
-  {
-    title: 'Personal Portfolio',
-    description:
-      'A modern portfolio site built with Next.js, TypeScript, and Tailwind CSS. Features a blog, contact form, and project showcase.',
-    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-  },
-];
 
 export default function ProjectsPage() {
   return (
@@ -23,7 +15,7 @@ export default function ProjectsPage() {
         A showcase of my recent work, side projects, and open source contributions.
       </p>
 
-      <Projects items={projectsList} />
+      <Projects items={projects} />
     </section>
   );
 }

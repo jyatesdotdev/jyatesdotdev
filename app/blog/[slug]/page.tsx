@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
   let posts = await getBlogPosts();
   let post = posts.find(post => post.slug === params.slug);
   if (!post) {
-    return;
+    return {};
   }
 
   let { title, publishedAt: publishedTime, summary: description, image } = post.metadata;
@@ -72,28 +72,28 @@ export default async function Blog({ params }) {
 
   return (
     <section>
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${baseUrl}${post.metadata.image}`
-              : `${baseUrl}/images/og/blog/${params.slug}.png`,
-            url: `${baseUrl}/blog/${post.slug}`,
-            author: {
-              '@type': 'Person',
-              name: 'My Portfolio',
-            },
-          }),
-        }}
-      />
+      {/*<script*/}
+      {/*  type="application/ld+json"*/}
+      {/*  suppressHydrationWarning*/}
+      {/*  dangerouslySetInnerHTML={{*/}
+      {/*    __html: JSON.stringify({*/}
+      {/*      '@context': 'https://schema.org',*/}
+      {/*      '@type': 'BlogPosting',*/}
+      {/*      headline: post.metadata.title,*/}
+      {/*      datePublished: post.metadata.publishedAt,*/}
+      {/*      dateModified: post.metadata.publishedAt,*/}
+      {/*      description: post.metadata.summary,*/}
+      {/*      image: post.metadata.image*/}
+      {/*        ? `${baseUrl}${post.metadata.image}`*/}
+      {/*        : `${baseUrl}/images/og/blog/${params.slug}.png`,*/}
+      {/*      url: `${baseUrl}/blog/${post.slug}`,*/}
+      {/*      author: {*/}
+      {/*        '@type': 'Person',*/}
+      {/*        name: 'My Portfolio',*/}
+      {/*      },*/}
+      {/*    }),*/}
+      {/*  }}*/}
+      {/*/>*/}
       <h1 className="title font-semibold text-2xl tracking-tighter">{post.metadata.title}</h1>
       <div className="flex flex-col mt-2 mb-8">
         <p className="text-sm text-neutral-600 dark:text-neutral-400">{formattedDate}</p>

@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+      }
+    ]
   },
   async rewrites() {
     return {
@@ -11,7 +17,7 @@ const nextConfig = {
           has: [
             {
               type: 'host',
-              value: 'blog.domain.com',
+              value: 'blog.jyates.dev',
             },
           ],
           destination: '/blog/:path*',
