@@ -1,30 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { highlight } from 'sugar-high';
 import React from 'react';
+import remarkGfm from 'remark-gfm';
 
-function Table({ data }) {
-  let headers = data.headers.map((header, index) => <th key={index}>{header}</th>);
-  let rows = data.rows.map((row, index) => (
-    <tr key={index}>
-      {row.map((cell, cellIndex) => (
-        <td key={cellIndex}>{cell}</td>
-      ))}
-    </tr>
-  ));
-
-  return (
-    <table>
-      <thead>
-        <tr>{headers}</tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
-  );
-}
-
-function CustomLink(props) {
+function CustomLink(props: any) {
   let href = props.href;
 
   if (href.startsWith('/')) {
@@ -42,13 +23,52 @@ function CustomLink(props) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />;
 }
 
-function RoundedImage(props) {
+function RoundedImage(props: any) {
   return <Image alt={props.alt} className="rounded-lg" {...props} />;
 }
 
 function Code({ children, ...props }) {
-  let codeHTML = highlight(children);
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+  return <code dangerouslySetInnerHTML={{ __html: highlight(children) }} {...props} />;
+}
+
+function BlockQuote({ children }) {
+  return (
+    <blockquote className="pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic">
+      {children}
+    </blockquote>
+  );
+}
+
+function TableHead({ children }) {
+  return <thead className="bg-neutral-100 dark:bg-neutral-800">{children}</thead>;
+}
+
+function TableRow({ children }) {
+  return (
+    <tr className="border-b border-neutral-200 dark:border-neutral-700 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+      {children}
+    </tr>
+  );
+}
+
+function TableCell({ children }) {
+  return (
+    <td className="border border-neutral-200 dark:border-neutral-700 px-4 py-2 text-sm">
+      {children}
+    </td>
+  );
+}
+
+function TableHeader({ children }) {
+  return (
+    <th className="border border-neutral-200 dark:border-neutral-700 px-4 py-2 font-medium text-neutral-800 dark:text-neutral-200">
+      {children}
+    </th>
+  );
+}
+
+function TableBody({ children }) {
+  return <tbody>{children}</tbody>;
 }
 
 function slugify(str) {
@@ -59,7 +79,7 @@ function slugify(str) {
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/&/g, '-and-') // Replace & with 'and'
     .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
-    .replace(/\-\-+/g, '-'); // Replace multiple - with single -
+    .replace(/--+/g, '-'); // Replace multiple - with single -
 }
 
 function createHeading(level) {
@@ -94,9 +114,24 @@ let components = {
   Image: RoundedImage,
   a: CustomLink,
   code: Code,
-  Table,
+  blockquote: BlockQuote,
+  thead: TableHead,
+  tr: TableRow,
+  td: TableCell,
+  th: TableHeader,
+  tbody: TableBody,
 };
 
-export function CustomMDX(props) {
-  return <MDXRemote {...props} components={{ ...components, ...(props.components || {}) }} />;
+export function CustomMDX(props: React.JSX.IntrinsicAttributes & MDXRemoteProps) {
+  return (
+    <MDXRemote
+      {...props}
+      components={{ ...components, ...(props.components || {}) }}
+      options={{
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+        },
+      }}
+    />
+  );
 }

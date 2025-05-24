@@ -30,7 +30,7 @@ export default async function Page() {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6 lg:gap-10 mb-12">
         <div className="relative flex-shrink-1 aspect-square w-24 sm:w-48 md:w-56 lg:w-64 xl:w-72">
           <Image
-            src="/images/profile.jpeg"
+            src="/images/profile-family.jpeg"
             alt="Profile picture"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

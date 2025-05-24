@@ -15,14 +15,20 @@ export const metadata: Metadata = {
     default: 'jyates.dev | Senior Software Engineer',
     template: '%s | jyates.dev',
   },
-  description: 'This is my personal site.',
+  description: 'Personal site showcasing my work history, projects, thoughts, and experiences.',
   openGraph: {
-    title: 'My Portfolio',
+    title: 'Embracing challenges with a passion for technology.',
     description: 'A place to showcase my work history, projects, thoughts, and experiences.',
     url: baseUrl,
     siteName: 'jyates.dev',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: `${baseUrl}/images/og/default.png`,
+        alt: 'jyates.dev',
+      },
+    ],
   },
   robots: {
     index: true,
@@ -37,7 +43,7 @@ export const metadata: Metadata = {
   },
 };
 
-const cx = (...classes) => classes.filter(Boolean).join(' ');
+const cx = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

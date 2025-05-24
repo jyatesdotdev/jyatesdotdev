@@ -6,9 +6,15 @@ This directory contains static assets. Files placed here will be served from the
 
 Place static assets (images, fonts, etc.) in this directory. They can be referenced like this:
 
-```jsx
-// Example usage in a component
-<img src="/image.jpg" alt="Description" />
+```html
+<Image
+  src="/images/profile-family.jpeg"
+  alt="Profile picture"
+  fill
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  className="rounded-full object-cover"
+  priority
+/>
 ```
 
 ## Common Asset Types
