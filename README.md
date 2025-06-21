@@ -1,63 +1,72 @@
-# Personal Site
+# Hi, I’m Jonathan 👋
 
-Current site features include:
+I’m a senior software developer with **~10 years of experience** spanning backend engineering, cloud‑native
+infrastructure, and DevOps automation. I love turning complex problems into elegant, reliable systems -and learning
+something new every day.
 
-- MDX and Markdown support
-- Optimized for SEO (sitemap, robots, JSON-LD schema)
-- RSS Feed
-- Dynamic OG images
-- Syntax highlighting
-- Tailwind v4
-- Vercel Speed Insights / Web Analytics
-- Geist font
-- Blog post "likes" feature
+---
 
-## Setting Up Blog Post Likes
+## 🛠️ Tech Stack & Interests
 
-This project includes a feature for viewers to "like" blog posts. The implementation:
-- Uses SQLite for local development
-- Uses Vercel Postgres for production
-- Prevents duplicate likes from the same IP address
-- Includes a heart icon that toggles state and shows the total count
+| Domain                 | Tools & Languages                                                  |
+|------------------------|--------------------------------------------------------------------|
+| **Languages**          | Java, Python, C/C++, JavaScript/TypeScript, Go (dabbling)          |
+| **Cloud / DevOps**     | AWS, Kubernetes (K3s & EKS), Terraform, Flux CD, Ansible           |
+| **Observability**      | Prometheus, Grafana, Loki                                          |
+| **Networking & Infra** | Proxmox, OPNsense, MetalLB, Traefik, BIND9                         |
+| **Data**               | DynamoDB, PostgreSQL, Redis                                        |
+| **Learning**           | Algorithms & Data Structures, System Design, Low‑Level Programming |
 
-### Local Development
+---
 
-The likes system works out of the box for local development using SQLite. Run the development server with:
+## 🚀 What I’m Working On
 
-```bash
-npm run dev
-```
+### `Rune` - a tiny interpreted language
 
-### Production Deployment with Vercel Postgres
+An interpreter written in **C** to teach myself data structures and algorithms from the ground up -syntax inspired by
+Python, with an interactive REPL and AST visualizer.
 
-For production, you'll need to set up Vercel Postgres:
+### Home‑Lab GitOps
 
-1. In your Vercel project dashboard, go to "Storage"
-2. Click "Create" and select "Postgres"
-3. Follow the setup process to create a new database
-4. Connect it to your project when prompted
-5. In your project's Environment Variables, make sure `DATABASE_URL` is set to `${POSTGRES_URL}`
+Terraform + Flux CD modules that provision and continuously reconcile a self‑hosted **K3s** cluster (Traefik ingress,
+MetalLB, external‑dns, BIND9, DHCP, VLAN segmentation, and more).
 
-For detailed instructions, see [VERCEL_POSTGRES_SETUP.md](./VERCEL_POSTGRES_SETUP.md)
+### CloudFront SPA Pipeline
 
-## ReCAPTCHA v3 Protection
+Migrating a Vercel‑hosted **Next.js** app to an **S3 + CloudFront** static site, backed by **API Gateway & Lambda (
+Python/Go)** for content management with DynamoDB.
 
-This project uses Google reCAPTCHA v3 to protect against spam and abuse. The protection is applied site-wide to:
+### Algorithm Visualizers
 
-- Contact form submissions
-- Comment submissions
-- Comment like interactions
+Interactive maze/graph explorers (DFS/BFS, Manhattan distance tweaks) built with Python + JavaScript to make algorithm
+study tactile and fun.
 
-### Setup Instructions
+### Istio Rate‑Limiting Lab
 
-1. Go to the [Google reCAPTCHA admin console](https://www.google.com/recaptcha/admin)
-2. Register a new site
-3. Choose reCAPTCHA v3
-4. Add your domain(s) and complete the registration
-5. Set the following environment variables:
-   ```
-   NEXT_PUBLIC_RECAPTCHA_SITE_KEY=your_site_key
-   RECAPTCHA_SECRET_KEY=your_secret_key
-   ```
+Bench‑testing Envoy filters, Redis, and the Kubernetes Gateway API to hit **100 k requests/s** while enforcing
+fine‑grained per‑subdomain quotas.
 
-For more detailed instructions, see [SES_CONTACT_SETUP.md](./SES_CONTACT_SETUP.md)
+---
+
+## 📚 Learning & Sharing
+
+I document my journey -successes **and** face‑plants -through blog posts, code comments, and discussions. Current
+deep‑dives include:
+
+- Distributed systems & consensus primitives (Raft, TO‑Bcast)
+- Performance tuning for JVM & Go micro‑services
+- Spaced‑repetition workflows for continuous learning
+
+---
+
+## 🌱 Open to Collaborate
+
+I’m always excited to chat about infrastructure, dev tooling, and projects that **make an impact**. Feel free to open an
+issue, start a discussion, or just say hi.
+
+---
+
+> *“Spot the bottleneck, learn fast, ship the fix.”*
+
+<!-- GitHub visitor stats & trophies can go here if you like those -->
+
