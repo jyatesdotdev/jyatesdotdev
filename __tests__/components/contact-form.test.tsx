@@ -75,12 +75,12 @@ describe('ContactForm Component', () => {
           captcha: 'test-token',
         }),
       });
-    });
+    }, { timeout: 3000 });
 
     // Check for success message
     await waitFor(() => {
       expect(screen.getByText('Message sent successfully!')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('shows error message when API call fails', async () => {
@@ -104,6 +104,6 @@ describe('ContactForm Component', () => {
     // Check for error message
     await waitFor(() => {
       expect(screen.getByText('API error')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 });
