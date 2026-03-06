@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { sendEmail } from 'app/lib/ses';
+import { sendEmail } from '@/app/lib/ses';
 
 // Threshold for reCAPTCHA v3 score (0.0 to 1.0)
 const RECAPTCHA_THRESHOLD = 0.5;
