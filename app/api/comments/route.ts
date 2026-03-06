@@ -55,10 +55,22 @@ export async function GET(request: NextRequest) {
         authorName: true,
         createdAt: true,
         updatedAt: true,
+        // ⚡ Bolt Optimization: Use _count to calculate total likes at the DB level
+        // instead of loading all likes into memory and counting in JavaScript.
+        _count: {
+          select: {
+            commentLikes: true,
+          },
+        },
+        // ⚡ Bolt Optimization: Check user's specific like status via filtered relation
+        // with take: 1, which avoids N+1 / overfetching issues of pulling every like.
         commentLikes: {
+          where: {
+            ipAddress: ipAddress,
+          },
+          take: 1,
           select: {
             id: true,
-            ipAddress: true,
           },
         },
       },
@@ -71,8 +83,8 @@ export async function GET(request: NextRequest) {
       authorName: comment.authorName,
       createdAt: comment.createdAt.toISOString(),
       updatedAt: comment.updatedAt.toISOString(),
-      commentLikes: comment.commentLikes.length,
-      userHasLiked: comment.commentLikes.some(like => like.ipAddress === ipAddress),
+      commentLikes: comment._count.commentLikes,
+      userHasLiked: comment.commentLikes.length > 0,
     }));
 
     return NextResponse.json({ comments: formattedComments });
