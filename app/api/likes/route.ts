@@ -12,19 +12,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
     }
 
-    // Count likes for the post
-    const likeCount = await prisma.postLike.count({
-      where: { slug },
-    });
-
-    // Check if the current IP has liked the post
     const ipAddress = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
-    const userHasLiked = await prisma.postLike.findFirst({
-      where: {
-        slug,
-        ipAddress,
-      },
-    });
+
+    // Count likes and check if current IP has liked concurrently
+    const [likeCount, userHasLiked] = await Promise.all([
+      prisma.postLike.count({
+        where: { slug },
+      }),
+      prisma.postLike.findFirst({
+        where: {
+          slug,
+          ipAddress,
+        },
+      }),
+    ]);
 
     return NextResponse.json({
       likes: likeCount,

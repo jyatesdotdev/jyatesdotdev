@@ -49,9 +49,10 @@ export const libraryItems: LibraryItem[] = [
   },
   {
     title: 'Practical Genetic Algorithms',
-    description: 'A comprehensive guide to genetic algorithms, including a practical guide to building genetic algorithms.',
+    description:
+      'A comprehensive guide to genetic algorithms, including a practical guide to building genetic algorithms.',
     url: 'https://onlinelibrary.wiley.com/doi/book/10.1002/0471671746',
     category: 'books',
     dateAdded: '2025-05-12',
-  }
+  },
 ];
