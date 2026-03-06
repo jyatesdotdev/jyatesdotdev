@@ -61,17 +61,17 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingLike) {
-      // If already liked, remove the like (toggle functionality)
-      await prisma.commentLike.delete({
-        where: {
-          id: existingLike.id,
-        },
-      });
-
-      // Count the updated number of likes
-      const likeCount = await prisma.commentLike.count({
-        where: { commentId },
-      });
+      // If already liked, remove the like (toggle functionality) and count in a single transaction
+      const [, likeCount] = await prisma.$transaction([
+        prisma.commentLike.delete({
+          where: {
+            id: existingLike.id,
+          },
+        }),
+        prisma.commentLike.count({
+          where: { commentId },
+        }),
+      ]);
 
       return NextResponse.json({
         likes: likeCount,
@@ -79,18 +79,18 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Otherwise, add a new like
-    await prisma.commentLike.create({
-      data: {
-        commentId,
-        ipAddress,
-      },
-    });
-
-    // Count the updated number of likes
-    const likeCount = await prisma.commentLike.count({
-      where: { commentId },
-    });
+    // Otherwise, add a new like and count in a single transaction
+    const [, likeCount] = await prisma.$transaction([
+      prisma.commentLike.create({
+        data: {
+          commentId,
+          ipAddress,
+        },
+      }),
+      prisma.commentLike.count({
+        where: { commentId },
+      }),
+    ]);
 
     return NextResponse.json({
       likes: likeCount,
