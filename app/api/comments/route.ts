@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { prisma } from 'app/lib/prisma';
 import DOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
+import { sendAdminNotification } from 'app/lib/ses';
 
 // Set up DOMPurify for server-side use
 const window = new JSDOM('').window;
@@ -129,12 +130,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // TODO: Add admin notification
-    // await sendAdminNotification({
-    //   type: 'new_comment',
-    //   commentId: comment.id,
-    //   postSlug: slug
-    // });
+    // Send admin notification
+    try {
+      await sendAdminNotification({
+        type: 'new_comment',
+        commentId: comment.id,
+        postSlug: slug,
+        authorName: comment.authorName,
+        content: comment.content,
+      });
+    } catch (error) {
+      // Don't fail the comment submission if notification fails
+      console.error('Failed to send admin notification:', error);
+    }
 
     return NextResponse.json(
       {

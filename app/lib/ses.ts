@@ -26,6 +26,14 @@ interface EmailParams {
   message: string;
 }
 
+interface AdminNotificationParams {
+  type: 'new_comment';
+  commentId: string;
+  postSlug: string;
+  authorName: string;
+  content: string;
+}
+
 export async function sendEmail({ name, email, message }: EmailParams) {
   const params: SendEmailCommandInput = {
     Source: SES_FROM_EMAIL,
@@ -59,6 +67,66 @@ ${message}
     return true;
   } catch (error) {
     console.error('Error sending email:', error);
+    throw error;
+  }
+}
+
+export async function sendAdminNotification({
+  type,
+  commentId,
+  postSlug,
+  authorName,
+  content,
+}: AdminNotificationParams) {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const adminUrl = `${baseUrl}/admin/comments`;
+
+  const params: SendEmailCommandInput = {
+    Source: SES_FROM_EMAIL,
+    Destination: {
+      ToAddresses: [SES_TO_EMAIL as string],
+    },
+    Message: {
+      Subject: {
+        Data: `New Comment on ${postSlug}`,
+        Charset: 'UTF-8',
+      },
+      Body: {
+        Html: {
+          Data: `
+            <h2>New Comment Received</h2>
+            <p><strong>Post:</strong> ${postSlug}</p>
+            <p><strong>Author:</strong> ${authorName}</p>
+            <p><strong>Comment:</strong></p>
+            <blockquote style="border-left: 4px solid #ccc; padding-left: 10px; margin-left: 0;">
+              ${content}
+            </blockquote>
+            <p><a href="${adminUrl}">Go to Moderation Panel</a></p>
+          `,
+          Charset: 'UTF-8',
+        },
+        Text: {
+          Data: `
+New Comment Received on ${postSlug}
+
+Author: ${authorName}
+Comment:
+${content}
+
+Moderation Panel: ${adminUrl}
+          `,
+          Charset: 'UTF-8',
+        },
+      },
+    },
+  };
+
+  try {
+    const command = new SendEmailCommand(params);
+    await sesClient.send(command);
+    return true;
+  } catch (error) {
+    console.error('Error sending admin notification:', error);
     throw error;
   }
 }
