@@ -36,31 +36,34 @@ function parseFrontmatter(fileContent: string) {
   return { metadata: metadata as Metadata, content };
 }
 
-function getMDXFiles(dir: string) {
-  return fs.readdirSync(dir).filter(file => path.extname(file) === '.mdx');
+async function getMDXFiles(dir: string) {
+  const files = await fs.promises.readdir(dir);
+  return files.filter(file => path.extname(file) === '.mdx');
 }
 
-function readMDXFile(filePath: string) {
-  let rawContent = fs.readFileSync(filePath, 'utf-8');
+async function readMDXFile(filePath: string) {
+  let rawContent = await fs.promises.readFile(filePath, 'utf-8');
   return parseFrontmatter(rawContent);
 }
 
-function getMDXData(dir: string) {
-  let mdxFiles = getMDXFiles(dir);
-  return mdxFiles.map(file => {
-    let { metadata, content } = readMDXFile(path.join(dir, file));
-    let slug = path.basename(file, path.extname(file));
+async function getMDXData(dir: string) {
+  let mdxFiles = await getMDXFiles(dir);
+  return Promise.all(
+    mdxFiles.map(async file => {
+      let { metadata, content } = await readMDXFile(path.join(dir, file));
+      let slug = path.basename(file, path.extname(file));
 
-    return {
-      metadata,
-      slug,
-      content,
-    };
-  });
+      return {
+        metadata,
+        slug,
+        content,
+      };
+    })
+  );
 }
 
 export async function getBlogPosts() {
-  return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'));
+  return await getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'));
 }
 
 export async function formatDate(date: string, includeRelative = false) {
