@@ -56,9 +56,16 @@ export async function GET(request: NextRequest) {
         createdAt: true,
         updatedAt: true,
         commentLikes: {
+          where: {
+            ipAddress: ipAddress,
+          },
           select: {
             id: true,
-            ipAddress: true,
+          },
+        },
+        _count: {
+          select: {
+            commentLikes: true,
           },
         },
       },
@@ -71,8 +78,8 @@ export async function GET(request: NextRequest) {
       authorName: comment.authorName,
       createdAt: comment.createdAt.toISOString(),
       updatedAt: comment.updatedAt.toISOString(),
-      commentLikes: comment.commentLikes.length,
-      userHasLiked: comment.commentLikes.some(like => like.ipAddress === ipAddress),
+      commentLikes: comment._count.commentLikes,
+      userHasLiked: comment.commentLikes.length > 0,
     }));
 
     return NextResponse.json({ comments: formattedComments });
