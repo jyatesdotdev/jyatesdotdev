@@ -2,6 +2,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { cache } from 'react';
 
 type Metadata = {
   title: string;
@@ -59,9 +60,12 @@ function getMDXData(dir: string) {
   });
 }
 
-export async function getBlogPosts() {
+// ⚡ Bolt Optimization: Wrap with React cache() to memoize expensive file system reads
+// and markdown parsing during a single request pass. This prevents redundant processing
+// when getBlogPosts() is called across multiple Server Components (like page, RSS, sitemap).
+export const getBlogPosts = cache(async () => {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'));
-}
+});
 
 export async function formatDate(date: string, includeRelative = false) {
   let currentDate = new Date();

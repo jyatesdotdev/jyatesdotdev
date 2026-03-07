@@ -1,0 +1,3 @@
+## 2024-05-24 - React cache() for expensive file system reads
+**Learning:** In Next.js App Router, functions like `getBlogPosts` that read from the filesystem (e.g., `fs.readdirSync`) are often called multiple times per request across different Server Components (e.g., `page.tsx`, `[slug]/page.tsx`, `sitemap.ts`, `rss/route.ts`). If they are not memoized, they unnecessarily read from the disk multiple times per render pass.
+**Action:** Wrap expensive data fetch functions that are called across multiple Server Components with React's `cache()` to memoize their results per request and avoid redundant processing and IO overhead.
