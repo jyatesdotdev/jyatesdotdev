@@ -1,0 +1,4 @@
+## 2024-05-24 - API Authentication Bypass
+**Vulnerability:** The admin basic authentication in `middleware.ts` was only matching routes starting with `/admin`. It was failing to protect the API endpoints at `/api/admin/*` (like `/api/admin/comments`), allowing unauthenticated users to view pending comments, and approve, reject, or delete them.
+**Learning:** In Next.js with app router, the API routes are located under `/api/` but the UI routes are under `/`. When protecting a specific feature area like "admin", it's critical to remember that both the UI paths (`/admin/*`) and the corresponding API paths (`/api/admin/*`) need to be explicitly protected in the middleware matcher and conditions.
+**Prevention:** Always verify that both UI and API endpoints are protected when implementing route-based authentication. Test API endpoints independently without credentials to verify they are properly secured.

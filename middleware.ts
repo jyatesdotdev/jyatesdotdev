@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
   );
 
   // Protect admin routes with basic authentication
-  if (pathName.startsWith('/admin')) {
+  if (pathName.startsWith('/admin') || pathName.startsWith('/api/admin')) {
     // Get basic auth credentials
     const basicAuth = request.headers.get('authorization');
 
@@ -46,6 +46,7 @@ export const config = {
   matcher: [
     // Protect all admin routes
     '/admin/:path*',
+    '/api/admin/:path*',
     // Apply security headers to all routes
     '/(.*)',
   ],
