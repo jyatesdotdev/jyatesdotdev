@@ -1,6 +1,6 @@
 # Hi, I'm Jonathan 👋
 
-I'm a senior software developer with **~10 years of experience** spanning backend engineering, cloud‑native
+I'm a software development engineer with **~10 years of experience** spanning backend engineering, cloud‑native
 infrastructure, and DevOps automation. I love turning complex problems into elegant, reliable systems — and learning
 something new every day.
 
@@ -48,7 +48,14 @@ graph TB
         DDB[(DynamoDB<br/>Single-Table Design)]
         SSM[SSM Parameter Store<br/>Admin Credentials]
         SES[SES v2<br/>Transactional Email]
-        COG[Cognito Identity Pool<br/>RUM Auth]
+    end
+
+    subgraph Observability
+        COG[Cognito Identity Pool<br/>Unauth RUM Access]
+        RUM[CloudWatch RUM<br/>100% Sampling]
+        BG[Budget Guard<br/>$10/mo Hard Stop]
+        EB[EventBridge Cron<br/>Monthly Reset]
+        LRes[Lambda: Reset<br/>Detach Deny Policy]
     end
 
     subgraph CI/CD
@@ -68,7 +75,9 @@ graph TB
     GHA --> TF --> Origins & Compute
     GHA -->|Lambda Zips| ART
     GHA -->|S3 Sync| S3
-    S3 -.->|RUM Telemetry| COG
+    S3 -.->|RUM Telemetry| COG --> RUM
+    BG -.->|Deny Policy| COG
+    EB --> LRes -.->|Detach Deny| COG
 ```
 
 **Key design decisions:**
@@ -76,6 +85,7 @@ graph TB
 - **Single-table DynamoDB** — likes, comments, and moderation state in one table with composite keys
 - **CloudFront error handling** — only 404 triggers SPA fallback (not 403), so API error responses pass through correctly
 - **IP deduplication** — extracts first IP from `X-Forwarded-For` chain for like toggle tracking
+- **RUM budget guard** — $10/month hard stop via AWS Budgets action that attaches a deny policy to the Cognito role; auto-resets monthly via EventBridge + Lambda
 
 Three public repositories: [`jyatesdotdev-frontend`](https://github.com/jyatesdotdev/jyatesdotdev-frontend) (React SPA), [`jyatesdotdev-api`](https://github.com/jyatesdotdev/jyatesdotdev-api) (Go Lambdas), [`jyatesdotdev-infra`](https://github.com/jyatesdotdev/jyatesdotdev-infra) (Terraform). A private bootstrap repo manages account-level resources (OIDC provider, deploy role, state/artifacts buckets).
 
