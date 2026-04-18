@@ -77,7 +77,7 @@ graph TB
 - **CloudFront error handling** — only 404 triggers SPA fallback (not 403), so API error responses pass through correctly
 - **IP deduplication** — extracts first IP from `X-Forwarded-For` chain for like toggle tracking
 
-Three repositories: [`jyatesdotdev-frontend`](https://github.com/jyatesdotdev/jyatesdotdev-frontend) (React SPA), [`jyatesdotdev-api`](https://github.com/jyatesdotdev/jyatesdotdev-api) (Go Lambdas), [`jyatesdotdev-infra`](https://github.com/jyatesdotdev/jyatesdotdev-infra) (Terraform)
+Three public repositories: [`jyatesdotdev-frontend`](https://github.com/jyatesdotdev/jyatesdotdev-frontend) (React SPA), [`jyatesdotdev-api`](https://github.com/jyatesdotdev/jyatesdotdev-api) (Go Lambdas), [`jyatesdotdev-infra`](https://github.com/jyatesdotdev/jyatesdotdev-infra) (Terraform). A private bootstrap repo manages account-level resources (OIDC provider, deploy role, state/artifacts buckets).
 
 ---
 
