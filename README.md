@@ -48,6 +48,7 @@ graph TB
         DDB[(DynamoDB<br/>Single-Table Design)]
         SSM[SSM Parameter Store<br/>Admin Credentials]
         SES[SES v2<br/>Transactional Email]
+        COG[Cognito Identity Pool<br/>RUM Auth]
     end
 
     subgraph CI/CD
@@ -67,6 +68,7 @@ graph TB
     GHA --> TF --> Origins & Compute
     GHA -->|Lambda Zips| ART
     GHA -->|S3 Sync| S3
+    S3 -.->|RUM Telemetry| COG
 ```
 
 **Key design decisions:**
