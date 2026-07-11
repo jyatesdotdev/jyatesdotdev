@@ -1,130 +1,141 @@
 # Hi, I'm Jonathan 👋
 
-I'm a software development engineer with **~10 years of experience** spanning backend engineering, cloud‑native
-infrastructure, and DevOps automation. I love turning complex problems into elegant, reliable systems — and learning
-something new every day.
+I'm a Software Development Engineer II at Amazon with **10+ years of experience** across backend engineering,
+cloud-native infrastructure, and developer automation. I enjoy building reliable systems, understanding how they fail,
+and turning what I learn into practical tools and clear documentation.
+
+You can find my writing, projects, and interactive experiments at **[jyates.dev](https://jyates.dev)**.
 
 ---
 
 ## 🛠️ Tech Stack & Interests
 
-| Domain                 | Tools & Languages                                                  |
-|------------------------|--------------------------------------------------------------------|
-| **Languages**          | Java, Python, C/C++, JavaScript/TypeScript, Go                     |
-| **Cloud / DevOps**     | AWS, Kubernetes (K3s & EKS), Terraform, Flux CD, Ansible           |
-| **Observability**      | Prometheus, Grafana, Loki                                          |
-| **Networking & Infra** | Proxmox, OPNsense, MetalLB, Traefik, BIND9                        |
-| **Data**               | DynamoDB, PostgreSQL, Redis                                        |
-| **Learning**           | Algorithms & Data Structures, System Design, Low‑Level Programming |
+| Domain | Tools & Topics |
+| --- | --- |
+| **Languages** | Java, Go, Python, TypeScript/JavaScript, C/C++ |
+| **Cloud / Platform** | AWS, Kubernetes (K3s & EKS), Terraform, Flux CD, Ansible, GitHub Actions |
+| **Distributed Systems** | Microservices, event-driven architecture, system design, DynamoDB |
+| **AI / Applied ML** | Agentic workflows, MCP, A2A, local inference, embeddings |
+| **Observability** | OpenTelemetry, CloudWatch, Prometheus, Grafana, Loki |
+| **Systems & Networks** | Proxmox, OPNsense, MetalLB, Traefik, BIND9 |
+| **Data** | DynamoDB, PostgreSQL, Redis |
 
 ---
 
-## 🌐 jyates.dev Architecture
+## 🔭 What I'm Building
 
-My portfolio site is a fully serverless application on AWS, deployed via GitHub Actions with OIDC — no static credentials.
+### [`bityllm`](https://github.com/jyatesdotdev/bityllm)
+
+A tiny language model written in pure TypeScript: trained from scratch, dependency-free, and running entirely in the
+browser as an interactive terminal dream sequence.
+
+### [`nexus`](https://github.com/jyatesdotdev/nexus)
+
+An educational multi-agent orchestration lab built around Google ADK, A2A, and MCP, with agent discovery,
+reviewer-critic workflows, and distributed tracing.
+
+### [`npu-embeddings`](https://github.com/jyatesdotdev/npu-embeddings)
+
+An OpenAI-compatible embeddings service that runs `all-MiniLM-L6-v2` on the AMD XDNA NPU in Strix Halo hardware.
+
+### [Comprehensive project templates](https://github.com/jyatesdotdev?tab=repositories&q=comprehensive-template)
+
+Production-minded starter repositories for Go, Rust, Python, TypeScript, C, C++, Java, and Swift, each with testing,
+security scanning, CLI examples, and container support appropriate to its ecosystem.
+
+---
+
+## 🌐 How jyates.dev Works
+
+[jyates.dev](https://jyates.dev) is a serverless portfolio, MDX blog, and browser playground on AWS. Alongside the
+usual career, project, library, and contact pages, it includes likes and comments, confirmed content subscriptions,
+RSS, a visitor map, and a browser-only `jsh` terminal. The interactive tools run in independent draggable windows,
+including a few deliberately nostalgic under-construction experiments.
 
 ```mermaid
-graph TB
-    subgraph Edge
-        DNS[Route53 DNS]
-        WAF[WAFv2 Rate Limiting]
-        CF[CloudFront CDN]
-        CFFunc[CloudFront Function<br/>SPA Rewrite + Subdomain]
+flowchart TB
+    Browser[Browser]
+
+    subgraph Edge["Edge"]
+        DNS[Route 53]
+        CF[CloudFront CDN<br/>TLS and security headers]
+        CFF[CloudFront Function<br/>SPA and subdomain rewrites]
     end
 
-    subgraph Origins
-        S3[S3 Static Site<br/>React SPA + Prerendered HTML]
-        APIGW[API Gateway REST<br/>API Key Auth]
+    subgraph Origins["Origins"]
+        Site[(S3 static site<br/>React SPA and prerendered HTML)]
+        API[API Gateway REST<br/>origin key, throttle, and quota]
     end
 
-    subgraph Compute
-        LInt[Lambda: Interactions<br/>Likes & Comments]
-        LCon[Lambda: Contact<br/>Email via SES]
-        LAdm[Lambda: Admin<br/>Comment Moderation]
-        LAuth[Lambda: Authorizer<br/>Basic Auth]
+    subgraph Compute["Go Lambda compute"]
+        HTTP[HTTP functions<br/>interactions, contact, admin, authorizer]
+        Notifications[Notifications<br/>content delivery]
     end
 
-    subgraph Storage
-        DDB[(DynamoDB<br/>Single-Table Design)]
-        SSM[SSM Parameter Store<br/>Admin Credentials]
-        SES[SES v2<br/>Transactional Email]
+    subgraph State["State and messaging"]
+        DDB[(DynamoDB<br/>state, confirmations, checkpoints)]
+        SES[SES v2<br/>email and topic contacts]
+        Failures[(SQS delivery failures)]
     end
 
-    subgraph Observability
-        COG[Cognito Identity Pool<br/>Unauth RUM Access]
-        RUM[CloudWatch RUM<br/>100% Sampling]
-        BG[Budget Guard<br/>$10/mo Hard Stop]
-        EB[EventBridge Cron<br/>Monthly Reset]
-        LRes[Lambda: Reset<br/>Detach Deny Policy]
-    end
+    Browser --> DNS --> CF
+    CF --> CFF --> Site
+    CF -->|/api/*| API
+    API --> HTTP
+    Site -->|trusted publish manifest| Notifications
 
-    subgraph CI/CD
-        GHA[GitHub Actions<br/>OIDC Auth]
-        TF[Terraform]
-        ART[S3 Artifacts Bucket]
-    end
+    HTTP --> DDB
+    HTTP --> SES
+    Notifications --> DDB
+    Notifications --> SES
+    Notifications -. exhausted retries .-> Failures
 
-    DNS --> WAF --> CF
-    CF --> CFFunc --> S3
-    CF -->|/api/*| APIGW
-    APIGW --> LAuth
-    APIGW --> LInt & LCon & LAdm
-    LInt & LAdm --> DDB
-    LCon --> SES
-    LAuth --> SSM
-    GHA --> TF --> Origins & Compute
-    GHA -->|Lambda Zips| ART
-    GHA -->|S3 Sync| S3
-    S3 -.->|RUM Telemetry| COG --> RUM
-    BG -.->|Deny Policy| COG
-    EB --> LRes -.->|Detach Deny| COG
+    RUM[CloudWatch RUM<br/>scoped Cognito role and budget guard]
+    Delivery[Private E2E gate and GitHub Actions<br/>OIDC, Terraform, versioned artifacts]
+
+    Browser -. telemetry .-> RUM
+    Delivery --> Site
+    Delivery --> HTTP
+    Delivery --> Notifications
 ```
 
-**Key design decisions:**
-- **SPA with prerendering** — React Router 7 generates static HTML at build time for SEO; client-side navigation after hydration
-- **Single-table DynamoDB** — likes, comments, and moderation state in one table with composite keys
-- **CloudFront error handling** — only 404 triggers SPA fallback (not 403), so API error responses pass through correctly
-- **IP deduplication** — extracts first IP from `X-Forwarded-For` chain for like toggle tracking
-- **RUM budget guard** — $10/month hard stop via AWS Budgets action that attaches a deny policy to the Cognito role; auto-resets monthly via EventBridge + Lambda
+**A few design decisions behind it:**
 
-Three public repositories: [`jyatesdotdev-frontend`](https://github.com/jyatesdotdev/jyatesdotdev-frontend) (React SPA), [`jyatesdotdev-api`](https://github.com/jyatesdotdev/jyatesdotdev-api) (Go Lambdas), [`jyatesdotdev-infra`](https://github.com/jyatesdotdev/jyatesdotdev-infra) (Terraform). A private bootstrap repo manages account-level resources (OIDC provider, deploy role, state/artifacts buckets).
+- **Static-first React** — React 19 and React Router 8 prerender known routes for S3 while preserving client-side
+  navigation. The build also generates RSS, sitemap, robots, and local PlantUML assets from MDX content.
+- **Purpose-scoped identity** — anonymous browser visitor IDs deduplicate likes without using IP addresses as account
+  identifiers. Coarse edge geography powers aggregated visitor statistics.
+- **Confirmed updates** — readers explicitly choose blog and project topics, confirm through a single-use email link,
+  and receive notifications only after a deployment is verified. DynamoDB checkpoints make delivery resumable.
+- **Release gates before mutation** — frontend and API deploy workflows test exact frontend, API, and integration
+  revisions together in LocalStack before assuming an AWS role through GitHub OIDC. No static cloud credentials are
+  used.
+- **Cost-aware observability** — RUM, encrypted logs, X-Ray, dashboards, throttles, and application write limits provide
+  useful production signals while a budget action can disable RUM ingestion at its monthly limit.
 
----
+The system is split across three public implementation repositories and two private operational repositories:
 
-## 🚀 What I'm Working On
-
-### `Rune` — a tiny interpreted language
-
-An interpreter written in **C** to teach myself data structures and algorithms from the ground up — syntax inspired by
-Python, with an interactive REPL and AST visualizer.
-
-### Home‑Lab GitOps
-
-Terraform + Flux CD modules that provision and continuously reconcile a self‑hosted **K3s** cluster (Traefik ingress,
-MetalLB, external‑dns, BIND9, DHCP, VLAN segmentation, and more).
-
-### Algorithm Visualizers
-
-Interactive maze/graph explorers (DFS/BFS, Manhattan distance tweaks) built with Python + JavaScript to make algorithm
-study tactile and fun.
+| Repository | Visibility | Responsibility |
+| --- | --- | --- |
+| [`jyatesdotdev-frontend`](https://github.com/jyatesdotdev/jyatesdotdev-frontend) | Public | React SPA, MDX content, browser tools, and static deployment |
+| [`jyatesdotdev-api`](https://github.com/jyatesdotdev/jyatesdotdev-api) | Public | Go Lambda handlers, services, persistence, and email delivery |
+| [`jyatesdotdev-infra`](https://github.com/jyatesdotdev/jyatesdotdev-infra) | Public | Terraform for AWS infrastructure, DNS, security, and observability |
+| `jyatesdotdev-integration` | Private | Cross-repository Playwright and LocalStack release gate |
+| Bootstrap repository | Private | Account-level OIDC, deployment role, artifact bucket, and Terraform state |
 
 ---
 
 ## 📚 Learning & Sharing
 
-I document my journey — successes **and** face‑plants — through blog posts, code comments, and discussions. Current
-deep‑dives include:
+I write about the useful parts of the work, including the wrong turns. Current areas of exploration include distributed
+systems and agent protocols, local AI acceleration, production security and cost trade-offs, and low-level hardware
+investigation. Recent notes and deep dives live on the **[jyates.dev blog](https://jyates.dev/blog)**.
 
-- Distributed systems & consensus primitives (Raft, TO‑Bcast)
-- Performance tuning for JVM & Go micro‑services
-- Spaced‑repetition workflows for continuous learning
+## 💬 Get in Touch
 
----
-
-## 🌱 Open to Collaborate
-
-I'm always excited to chat about infrastructure, dev tooling, and projects that **make an impact**. Feel free to open an
-issue, start a discussion, or just say hi.
+The best places to reach me are the **[contact form](https://jyates.dev/contact)** or
+**[LinkedIn](https://www.linkedin.com/in/jyatesdotdev/)**. Project-specific questions and contributions are welcome in
+the relevant repository.
 
 ---
 
